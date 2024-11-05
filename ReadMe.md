@@ -16,4 +16,4 @@ Here's a breakdown of key concepts:
    - **Microservices**: Containers are ideal for microservices architectures, where each service can be deployed independently in its own container.
    - **Continuous Integration/Continuous Deployment (CI/CD)**: Containers simplify the CI/CD pipeline by ensuring consistency across various environments.
 
-In a typical containerized setup, you’d write a Dockerfile to define the container’s contents, build it into an image, and then deploy it on a platform (such as Kubernetes or Docker Swarm) to scale and manage your application.
+In a typical containerized setup, you’d write a Dockerfile to define the container’s contents, build it into an image, and then deploy it on a platform (such as Kubernetes or Docker Swarm) to scale and manage your application.# Docker
