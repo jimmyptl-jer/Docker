@@ -22,100 +22,310 @@ In a typical containerized setup, you’d write a Dockerfile to define the conta
 
 Docker is a platform for developing, shipping, and running applications in containers. Here are some commonly used Docker commands:
 
-1. **Image Commands:**
-    - `docker images` or `docker image ls`: List all images on your local machine.
-    - `docker pull <image_name>`: Download a Docker image from a registry.
-    - `docker build -t <image_name> <path_to_Dockerfile>`: Build a Docker image from a Dockerfile.
-2. **Container Commands:**
-    - `docker ps`: List all running containers.
-    - `docker ps -a`: List all containers (both running and stopped).
-    - `docker run <options> <image_name>`: Create and start a container from an image.
-    - `docker start <container_id_or_name>`: Start a stopped container.
-    - `docker stop <container_id_or_name>`: Stop a running container.
-    - `docker restart <container_id_or_name>`: Restart a running or stopped container.
-    - `docker exec -it <container_id_or_name> <command>`: Run a command inside a running container.
-3. **Container Lifecycle:**
-    - `docker create <image_name>`: Create a container without starting it.
-    - `docker rm <container_id_or_name>`: Remove a stopped container.
-    - `docker rmi <image_id_or_name>`: Remove a Docker image.
-    - `docker kill <container_id_or_name>`: Forcefully stop a running container.
-4. **Container Logs:**
-    - `docker logs <container_id_or_name>`: View the logs of a running or stopped container.
-5. **Network Commands:**
-    - `docker network ls`: List all Docker networks.
-    - `docker network inspect <network_id_or_name>`: Display detailed information about a network.
-6. **Volume Commands:**
-    - `docker volume ls`: List all Docker volumes.
-    - `docker volume create <volume_name>`: Create a Docker volume.
-    - `docker volume inspect <volume_name>`: Display detailed information about a volume.
-7. **Registry and Login:**
-    - `docker login`: Log in to a Docker registry.
-    - `docker push <image_name>`: Push an image to a Docker registry.
-    - `docker pull <image_name>`: Pull an image from a Docker registry.
-8. **Docker Compose:**
-    - `docker-compose up`: Start services defined in a `docker-compose.yml` file.
-    - `docker-compose down`: Stop and remove services defined in a `docker-compose.yml` file.
+The `docker version` and `docker info` commands provide detailed information about your Docker installation and environment.
 
-Docker provides a powerful networking feature that allows containers to communicate with each other and with the outside world. The Docker networking commands help you manage and inspect the networking aspects of your Docker containers. Here are some common Docker network CLI commands:
+### `docker version`
+The `docker version` command shows version details for each component of Docker, including the Docker Engine and CLI. This is useful for verifying the installed version and compatibility information.
 
-1. **List Networks:**
-To see a list of Docker networks on your system, you can use:
-    
-    ```bash
-    docker network ls
-    
-    ```
-    
-2. **Inspect a Network:**
-To get detailed information about a specific network, you can use:
-    
-    ```bash
-    docker network inspect <network_name_or_id>
-    
-    ```
-    
-    Replace `<network_name_or_id>` with the name or ID of the network.
-    
-3. **Create a Network:**
-To create a new Docker network, you can use:
-    
-    ```bash
-    docker network create <network_name>
-    
-    ```
-    
-    Replace `<network_name>` with the desired name for your network.
-    
-4. **Connect a Container to a Network:**
-To connect an existing container to a specific network, you can use:
-    
-    ```bash
-    docker network connect <network_name> <container_name_or_id>
-    
-    ```
-    
-    Replace `<network_name>` with the name of the network and `<container_name_or_id>` with the name or ID of the container.
-    
-5. **Disconnect a Container from a Network:**
-To disconnect a container from a network, you can use:
-    
-    ```bash
-    docker network disconnect <network_name> <container_name_or_id>
-    
-    ```
-    
-6. **Remove a Network:**
-To remove a Docker network, you can use:
-    
-    ```bash
-    docker network rm <network_name>
-    
-    ```
-    
-    Replace `<network_name>` with the name of the network.
-    
+```bash
+docker version
+```
 
-These are some of the basic Docker networking commands. Docker also provides more advanced networking features, such as user-defined bridge networks, overlay networks for swarm mode, and support for different network drivers.
+#### Output includes:
+- **Client**:
+  - `Version`: Docker client version.
+  - `API version`: API version compatibility between client and server.
+  - `Go version`: Version of Go programming language used to build Docker.
+  - `Git commit`: Commit hash for the build.
+  - `Built`: Date and time of the build.
+  - `OS/Arch`: Operating system and architecture for the client.
 
-Remember to replace placeholders like `<network_name_or_id>` or `<container_name_or_id>` with the actual names or IDs in your setup.
+- **Server** (Docker Daemon):
+  - Similar details as the client section, showing the version and API compatibility of the server.
+
+**Example Output**:
+```plaintext
+Client:
+ Version:           23.0.0
+ API version:       1.41
+ Go version:        go1.16.6
+ Git commit:        abcdef1
+ Built:             Fri Jul 2 12:34:56 2023
+ OS/Arch:           linux/amd64
+
+Server:
+ Engine:
+  Version:          23.0.0
+  API version:      1.41 (minimum version 1.12)
+  Go version:       go1.16.6
+  Git commit:       abcdef1
+  Built:            Fri Jul 2 12:34:56 2023
+  OS/Arch:          linux/amd64
+  Experimental:     false
+```
+
+### `docker info`
+The `docker info` command provides detailed information about the Docker daemon, including the system’s current status, storage drivers, and network configurations. It’s useful for diagnosing issues and understanding system resources.
+
+```bash
+docker info
+```
+
+#### Output includes:
+- **General System Information**:
+  - `Containers`: Total containers and their states (running, stopped).
+  - `Images`: Total number of images stored.
+  - `Storage Driver`: Name of the storage driver in use (e.g., `overlay2`, `aufs`).
+  - `Kernel Version`: Linux kernel version (on Linux systems).
+  - `Operating System`: OS details.
+  - `Architecture`: System architecture.
+  - `Docker Root Dir`: Location of Docker storage on disk.
+
+- **Resource Limits**:
+  - `CPUs`: Number of CPU cores Docker can access.
+  - `Total Memory`: Total memory Docker can use.
+
+- **Security and Network Configurations**:
+  - `Cgroup Driver`: Cgroup management driver.
+  - `Plugins`: Installed plugins (Network, Volume, etc.).
+  - `Network`: Default network configurations.
+  - `Registry`: Default image registry (usually Docker Hub).
+
+**Example Output**:
+```plaintext
+Containers: 5
+ Running: 2
+ Paused: 0
+ Stopped: 3
+Images: 10
+Storage Driver: overlay2
+...
+CPUs: 4
+Total Memory: 16GiB
+...
+Docker Root Dir: /var/lib/docker
+Debug Mode: false
+...
+```
+
+### Use Cases
+- **`docker version`**: For compatibility checks and ensuring the correct versions of Docker components are installed.
+- **`docker info`**: For system diagnostics, resource availability, and Docker environment setup details.
+
+A **Docker container** is a lightweight, standalone, executable package of software that includes everything needed to run an application: code, runtime, libraries, and system tools. Containers are isolated from one another and from the host system, ensuring that applications run consistently across different environments.
+
+Here are some essential commands related to Docker containers:
+
+---
+
+### 1. **Starting and Running Containers**
+
+- **Run a New Container**: 
+  ```bash
+  docker container run [OPTIONS] IMAGE [COMMAND] [ARG...]
+  ```
+  - `docker run -d nginx`: Runs an NGINX container in detached mode.
+  - `docker run -it ubuntu bash`: Runs an Ubuntu container interactively with a Bash shell.
+
+- **Start a Stopped Container**:
+  ```bash
+  docker start <container_id or name>
+  ```
+
+- **Run Container with Port Mapping**:
+  ```bash
+  docker run -p <host_port>:<container_port> IMAGE
+  ```
+  - Example: `docker run -p 8080:80 nginx` maps port 80 in the container to port 8080 on the host.
+
+---
+
+### 2. **Container Management**
+
+- **List Running Containers**:
+  ```bash
+  docker ps
+  ```
+
+- **List All Containers (Running and Stopped)**:
+  ```bash
+  docker ps -a
+  ```
+
+- **Stop a Running Container**:
+  ```bash
+  docker stop <container_id or name>
+  ```
+
+- **Restart a Container**:
+  ```bash
+  docker restart <container_id or name>
+  ```
+
+- **Remove a Stopped Container**:
+  ```bash
+  docker rm <container_id or name>
+  ```
+
+- **Remove All Stopped Containers**:
+  ```bash
+  docker container prune
+  ```
+
+---
+
+### 3. **Inspecting and Accessing Containers**
+
+- **View Detailed Container Information**:
+  ```bash
+  docker inspect <container_id or name>
+  ```
+
+- **View Logs for a Container**:
+  ```bash
+  docker logs <container_id or name>
+  ```
+
+- **Attach to a Running Container** (reconnect to a container’s process):
+  ```bash
+  docker attach <container_id or name>
+  ```
+
+- **Access a Running Container with a Shell**:
+  ```bash
+  docker exec -it <container_id or name> /bin/bash
+  ```
+  - `docker exec -it <container_id> /bin/sh` is used for containers with minimal OS environments that lack Bash.
+
+---
+
+### 4. **Container Networking**
+
+- **List Networks**:
+  ```bash
+  docker network ls
+  ```
+
+- **Connect a Container to a Network**:
+  ```bash
+  docker network connect <network_name> <container_id or name>
+  ```
+
+- **Disconnect a Container from a Network**:
+  ```bash
+  docker network disconnect <network_name> <container_id or name>
+  ```
+
+---
+
+### 5. **Saving and Loading Containers**
+
+- **Commit Changes to a Container as a New Image**:
+  ```bash
+  docker commit <container_id or name> <new_image_name>
+  ```
+
+- **Export a Container’s Filesystem as a Tar Archive**:
+  ```bash
+  docker export <container_id or name> > <filename>.tar
+  ```
+
+- **Import a Container’s Filesystem from a Tar Archive**:
+  ```bash
+  docker import <filename>.tar
+  ```
+
+---
+
+### 6. **Container Cleanup**
+
+- **Remove All Containers (Running and Stopped)**:
+  ```bash
+  docker rm -f $(docker ps -aq)
+  ```
+
+- **Remove Unused Containers, Images, and Networks**:
+  ```bash
+  docker system prune
+  ```
+
+---
+
+These commands are fundamental for managing Docker containers, whether it’s starting, stopping, accessing, networking, or cleaning up containers. 
+
+Here are examples of how to run, stop, and remove Docker containers for **nginx**, **httpd** (Apache HTTP Server), and **MySQL**. Each example includes the commands for creating the container, stopping it, and then removing it.
+
+### 1. Nginx Example
+
+**Running the Nginx Container**
+```bash
+docker container run -d -p 8080:80 --name nginx_server nginx
+```
+- **Explanation**: This command runs an Nginx container in detached mode (`-d`), mapping port `8080` on the host to port `80` in the container. The container is named `nginx_server`.
+
+**Stopping the Nginx Container**
+```bash
+docker container stop nginx_server
+```
+- **Explanation**: This command stops the running Nginx container named `nginx_server`.
+
+**Removing the Nginx Container**
+```bash
+docker container rm nginx_server
+```
+- **Explanation**: This command removes the stopped Nginx container named `nginx_server`.
+
+---
+
+### 2. Apache HTTP Server (httpd) Example
+
+**Running the Httpd Container**
+```bash
+docker container run -d -p 8081:80 --name httpd_server httpd
+```
+- **Explanation**: This command runs an Apache HTTP Server container in detached mode, mapping port `8081` on the host to port `80` in the container. The container is named `httpd_server`.
+
+**Stopping the Httpd Container**
+```bash
+docker container stop httpd_server
+```
+- **Explanation**: This command stops the running Apache HTTP Server container named `httpd_server`.
+
+**Removing the Httpd Container**
+```bash
+docker container rm httpd_server
+```
+- **Explanation**: This command removes the stopped Apache HTTP Server container named `httpd_server`.
+
+---
+
+### 3. MySQL Example
+
+**Running the MySQL Container**
+```bash
+docker container run -d -p 3307:3306 --name mysql_server -e MYSQL_ROOT_PASSWORD=my-secret-pw mysql
+```
+- **Explanation**: This command runs a MySQL container in detached mode, mapping port `3307` on the host to port `3306` in the container. The container is named `mysql_server`, and the root password for MySQL is set to `my-secret-pw` using the `MYSQL_ROOT_PASSWORD` environment variable.
+
+**Stopping the MySQL Container**
+```bash
+docker container stop mysql_server
+```
+- **Explanation**: This command stops the running MySQL container named `mysql_server`.
+
+**Removing the MySQL Container**
+```bash
+docker container rm mysql_server
+```
+- **Explanation**: This command removes the stopped MySQL container named `mysql_server`.
+
+---
+
+### Summary of Commands
+
+| Service | Run Command | Stop Command | Remove Command |
+|---------|-------------|--------------|----------------|
+| Nginx   | `docker container run -d -p 8080:80 --name nginx_server nginx` | `docker container stop nginx_server` | `docker container rm nginx_server` |
+| Httpd   | `docker container run -d -p 8081:80 --name httpd_server httpd` | `docker container stop httpd_server` | `docker container rm httpd_server` |
+| MySQL   | `docker container run -d -p 3307:3306 --name mysql_server -e MYSQL_ROOT_PASSWORD=my-secret-pw mysql` | `docker container stop mysql_server` | `docker container rm mysql_server` |
 
