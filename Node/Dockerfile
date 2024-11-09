@@ -1,20 +1,35 @@
-# Step 1: Use an official Node.js runtime as the base image
-FROM node
+# Use the official Node.js image from Docker Hub as the base image
+FROM node:23
 
-# Step 2: Set the working directory inside the container
+# Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Step 3: Copy the package.json and package-lock.json files to the container
+# Set the environment to 'production' for optimized dependency installation
+ENV NODE_ENV production
+
+# Suppress experimental warnings
+ENV NODE_OPTIONS="--no-warnings"
+
+# Echo the Node.js version
+RUN echo "Node.js version:" && node --version
+
+# Echo the npm version
+RUN echo "npm version:" && npm --version
+
+# Copy only the package.json and package-lock.json files to the working directory
 COPY package*.json ./
 
-# Step 4: Install dependencies
-RUN npm install
+# Install only production dependencies using the new omit flag
+RUN npm ci --only=production
 
-# Step 5: Copy the application source code to the container
-COPY . .
+# Switch to a non-root user to improve security
+USER node
 
-# Step 6: Expose the port the app will run on
+# Copy the rest of the application source code from the host to the container
+COPY --chown=node:node ./src .
+
+# Expose port 3000 to allow communication with the containerized application
 EXPOSE 3000
 
-# Step 7: Define the command to run the application
-CMD ["npm", "start"]
+# Specify the command to run the application
+CMD ["node", "app.js"]
